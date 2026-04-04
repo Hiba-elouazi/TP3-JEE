@@ -1,0 +1,29 @@
+package ma.ensah;
+
+import jakarta.servlet.*;
+import jakarta.servlet.annotation.*;
+import jakarta.servlet.http.*;
+import java.io.IOException;
+
+@WebFilter("/home")   
+public class AuthFilter implements Filter {
+
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response,
+                         FilterChain chain) throws IOException, ServletException {
+
+        HttpServletRequest  req  = (HttpServletRequest)  request;
+        HttpServletResponse resp = (HttpServletResponse) response;
+
+        HttpSession session = req.getSession(false);
+        boolean loggedIn = (session != null && session.getAttribute("username") != null);
+
+        if (loggedIn) {
+           
+            chain.doFilter(request, response);
+        } else {
+             
+            resp.sendRedirect(req.getContextPath() + "/login");
+        }
+    }
+}
