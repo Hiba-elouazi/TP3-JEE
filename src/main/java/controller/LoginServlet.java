@@ -1,9 +1,10 @@
-package ma.ensah;
+package controller;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import java.io.IOException;
+import model.UserDAO;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
@@ -11,7 +12,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("WEB-INF/views/login.jsp")
+        request.getRequestDispatcher("/WEB-INF/views/login.jsp")
                .forward(request, response);
     }
 
@@ -26,21 +27,19 @@ public class LoginServlet extends HttpServlet {
         if (username == null || password == null ||
             username.trim().isEmpty() || password.isEmpty()) {
             request.setAttribute("erreur", "Veuillez remplir tous les champs.");
-            request.getRequestDispatcher("WEB-INF/views/login.jsp")
+            request.getRequestDispatcher("/WEB-INF/views/login.jsp")
                    .forward(request, response);
             return;
         }
 
-        if (UserStore.authenticate(username.trim(), password)) {
-           
+        if (UserDAO.authenticate(username.trim(), password)) {
             HttpSession session = request.getSession();
             session.setAttribute("username", username.trim());
-            session.setMaxInactiveInterval(30 * 60);  
-
+            session.setMaxInactiveInterval(30 * 60);
             response.sendRedirect(request.getContextPath() + "/home");
         } else {
             request.setAttribute("erreur", "Nom d'utilisateur ou mot de passe incorrect.");
-            request.getRequestDispatcher("WEB-INF/views/login.jsp")
+            request.getRequestDispatcher("/WEB-INF/views/login.jsp")
                    .forward(request, response);
         }
     }

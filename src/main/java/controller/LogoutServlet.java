@@ -1,4 +1,5 @@
-package ma.ensah;
+package controller;
+
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
